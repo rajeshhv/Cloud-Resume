@@ -1,15 +1,14 @@
 export default async function handler(req, res) {
-    // Set CORS headers to allow your specific domain
-    res.setHeader('Access-Control-Allow-Origin', 'https://rajeshresume.link');
+    // This allows any website to call your API (needed for S3/Vercel cross-origin)
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-    // Handle Preflight (OPTIONS request)
+    // This is the "Preflight" handler that was causing your 403 error
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    // Only allow POST
     if (req.method !== 'POST') {
         return res.status(405).json({ answer: "Method not allowed" });
     }
@@ -32,13 +31,15 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (!response.ok) {
-            return res.status(500).json({ answer: "Google API Error: " + JSON.stringify(data.error.message) });
+            console.error("Google API Error:", JSON.stringify(data));
+            return res.status(500).json({ answer: "Google API Error. Check logs." });
         }
 
         const answer = data.candidates[0].content.parts[0].text;
         return res.status(200).json({ answer });
         
     } catch (error) {
+        console.error("Server Error:", error);
         return res.status(500).json({ answer: "Server Error: " + error.message });
     }
 }
