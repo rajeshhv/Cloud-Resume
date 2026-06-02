@@ -9,6 +9,38 @@
 	</head>
 
 	<body>
+		<div id="ai-assistant" style="margin:20px;">
+    <h3>Ask Rajesh AI</h3>
+    <input type="text" id="userQuestion" placeholder="Ask about my experience..." style="width:70%;padding:10px;">
+    <button onclick="askAI()">Ask</button>
+    <div id="response" style="margin-top:15px;padding:10px;border:1px solid #ccc;min-height:20px;"></div>
+</div>
+
+<script>
+async function askAI() {
+    const questionInput = document.getElementById("userQuestion");
+    const responseDiv = document.getElementById("response");
+    const question = questionInput.value;
+
+    if (!question) return;
+
+    responseDiv.innerText = "Rajesh AI is thinking...";
+
+    try {
+        // Change this URL to your actual Vercel deployment URL
+        const response = await fetch("https://cloud-resume-hyod73daj-robo-s-projects1.vercel.app", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: question })
+        });
+
+        const data = await response.json();
+        responseDiv.innerText = data.answer;
+    } catch (error) {
+        responseDiv.innerText = "Error: Could not connect to the AI service.";
+    }
+}
+</script>
 		<div id="container">
 			<div id="sidebar">
 				<div id="image">
