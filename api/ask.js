@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const API_KEY = process.env.GEMINI_KEY;
 
     // Use the raw REST API URL instead of the SDK
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
     try {
         const response = await fetch(url, {
